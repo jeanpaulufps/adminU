@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Entornos virtuales
+venv/
+env/
+.env
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django specific
+*.log
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+static/
+
+# Coverage reports
+coverage.xml
+*.cover
+*.coverage
+*.py,cover
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Pytest
+.cache
+pytest-debug.log
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*~
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Configuration files
+*.env
+*.env.*
