@@ -1,6 +1,5 @@
 from django.db import models
 
-
 # Create your models here.
 
 
@@ -32,11 +31,23 @@ class Usuario(models.Model):
 
 
 class Pensum(models.Model):
+    nombre = models.CharField(max_length=100, default=' ')
     pass
 
 
 class Departamento(models.Model):
     nombre = models.CharField(max_length=100)
+
+
+class Profesor(Usuario):
+    pass
+
+
+class Horario(models.Model):
+    horaInicio = models.TimeField()
+    horaFin = models.TimeField()
+    dia = models.IntegerField()
+    aula = models.CharField(max_length=200)
 
 
 class Carrera(models.Model):
@@ -53,15 +64,6 @@ class Carrera(models.Model):
     )
 
 
-class Estudiante(Usuario):
-    materiasMatriculadas = models.ManyToManyField(
-        "Materia", related_name="estudiantes_matriculados", blank=True
-    )
-    carrera = models.ManyToManyField(Carrera)
-    creditosAprobados = models.IntegerField()
-    estadoMatricula = models.IntegerField()
-
-
 class Materia(models.Model):
     nombre = models.CharField(max_length=100)
     codigo = models.CharField(max_length=20)
@@ -72,15 +74,13 @@ class Materia(models.Model):
     )
 
 
-class Profesor(Usuario):
-    pass
-
-
-class Horario(models.Model):
-    horaInicio = models.TimeField()
-    horaFin = models.TimeField()
-    dia = models.IntegerField()
-    aula = models.CharField(max_length=200)
+class Estudiante(Usuario):
+    materiasMatriculadas = models.ManyToManyField(
+        Materia, related_name="estudiantes_matriculados", null=True
+    )
+    carrera = models.ManyToManyField(Carrera, blank=False)
+    creditosAprobados = models.IntegerField()
+    estadoMatricula = models.IntegerField()
 
 
 class Grupo(models.Model):
