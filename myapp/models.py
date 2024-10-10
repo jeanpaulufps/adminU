@@ -2,6 +2,13 @@ from django.db import models
 
 
 # Create your models here.
+
+
+class TipoDocumento(models.Model):
+    nombre = models.CharField(max_length=50)
+    abreviacion = models.CharField(max_length=10)
+
+
 class Usuario(models.Model):
     nombre = models.CharField(max_length=100)
     codigo = models.CharField(max_length=100)
