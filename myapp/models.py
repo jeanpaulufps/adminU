@@ -10,19 +10,25 @@ class TipoDocumento(models.Model):
 
 
 class Usuario(models.Model):
-    nombre = models.CharField(max_length=100)
-    codigo = models.CharField(max_length=100)
+    nombres = models.CharField(max_length=50, default=' ')
+    apellidos = models.CharField(max_length=50, default=' ')
+    codigo = models.CharField(max_length=50)
     fechaNacimiento = models.DateField()
     direccion = models.CharField(max_length=255)
-    telefono = models.CharField(max_length=100)
-    correoElectronico = models.CharField(max_length=100)
-    correoInstitucional = models.CharField(max_length=100)
+    telefono = models.CharField(max_length=20)
+    correoElectronico = models.CharField(max_length=50)
+    correoInstitucional = models.CharField(max_length=50)
     fechaIngreso = models.DateField()
-    numeroDocumento = models.CharField(max_length=32)
-    tipoDocumento = models.CharField(max_length=10)
+    numeroDocumento = models.CharField(max_length=20)
+    tipoDocumento = models.ForeignKey(
+        TipoDocumento, on_delete=models.SET_NULL, null=True
+    )
 
     class Meta:
-        abstract = True  # Indica que es una clase abstracta
+        abstract = True
+
+    def __str__(self):
+        return f"{self.nombres} {self.apellidos}"
 
 
 class Pensum(models.Model):
