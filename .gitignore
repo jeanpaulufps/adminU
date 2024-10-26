@@ -46,3 +46,6 @@ Thumbs.db
 # Configuration files
 *.env
 *.env.*
+
+# Database
+db.sqlite3

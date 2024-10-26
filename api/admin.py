@@ -1,5 +1,6 @@
 from django.contrib import admin
-from myapp.models import (
+
+from api.models import (
     Pensum,
     Departamento,
     Profesor,
@@ -10,12 +11,14 @@ from myapp.models import (
     Grupo,
     Nota,
     Semestre,
+    TipoDocumento,
 )
 
-# from myapp import models
+# from api import models
 
 # Register your models here.
 
+admin.site.register(TipoDocumento)
 admin.site.register(Pensum)
 admin.site.register(Departamento)
 admin.site.register(Profesor)

@@ -7,7 +7,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
+<<<<<<< HEAD:myapp/migrations/0007_carrera_departamento_carrera_pensum.py
         ('myapp', '0006_remove_carrera_departamento_remove_carrera_pensum'),
+=======
+        ('api', '0006_remove_carrera_departamento_remove_carrera_pensum'),
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0007_carrera_departamento_carrera_pensum.py
     ]
 
     operations = [
@@ -18,7 +22,11 @@ class Migration(migrations.Migration):
                 default=1,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
+<<<<<<< HEAD:myapp/migrations/0007_carrera_departamento_carrera_pensum.py
                 to='myapp.departamento',
+=======
+                to='api.departamento',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0007_carrera_departamento_carrera_pensum.py
             ),
         ),
         migrations.AddField(
@@ -28,7 +36,11 @@ class Migration(migrations.Migration):
                 default=1,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
+<<<<<<< HEAD:myapp/migrations/0007_carrera_departamento_carrera_pensum.py
                 to='myapp.pensum',
+=======
+                to='api.pensum',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0007_carrera_departamento_carrera_pensum.py
             ),
         ),
     ]

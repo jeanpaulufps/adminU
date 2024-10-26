@@ -6,7 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
+<<<<<<< HEAD:myapp/migrations/0006_remove_carrera_departamento_remove_carrera_pensum.py
         ('myapp', '0005_carrera_departamento_horario_pensum_and_more'),
+=======
+        ('api', '0005_carrera_departamento_horario_pensum_and_more'),
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0006_remove_carrera_departamento_remove_carrera_pensum.py
     ]
 
     operations = [

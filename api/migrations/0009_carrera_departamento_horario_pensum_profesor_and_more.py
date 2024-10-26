@@ -7,7 +7,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
         ('myapp', '0008_remove_carrera_departamento_remove_carrera_pensum_and_more'),
+=======
+        ('api', '0008_remove_carrera_departamento_remove_carrera_pensum_and_more'),
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
     ]
 
     operations = [
@@ -107,7 +111,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='estudiante',
             name='carrera',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
             field=models.ManyToManyField(to='myapp.carrera'),
+=======
+            field=models.ManyToManyField(to='api.carrera'),
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
         ),
         migrations.AddField(
             model_name='carrera',
@@ -116,7 +124,11 @@ class Migration(migrations.Migration):
                 default=1,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                 to='myapp.departamento',
+=======
+                to='api.departamento',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
             ),
         ),
         migrations.CreateModel(
@@ -140,7 +152,11 @@ class Migration(migrations.Migration):
                     models.ManyToManyField(
                         blank=True,
                         related_name='materias_requisito',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                         to='myapp.materia',
+=======
+                        to='api.materia',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                     ),
                 ),
             ],
@@ -149,7 +165,11 @@ class Migration(migrations.Migration):
             model_name='estudiante',
             name='materiasMatriculadas',
             field=models.ManyToManyField(
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                 blank=True, related_name='estudiantes_matriculados', to='myapp.materia'
+=======
+                blank=True, related_name='estudiantes_matriculados', to='api.materia'
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
             ),
         ),
         migrations.CreateModel(
@@ -173,7 +193,11 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name='notas',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                         to='myapp.estudiante',
+=======
+                        to='api.estudiante',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                     ),
                 ),
                 (
@@ -181,7 +205,11 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name='notas',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                         to='myapp.materia',
+=======
+                        to='api.materia',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                     ),
                 ),
             ],
@@ -193,7 +221,11 @@ class Migration(migrations.Migration):
                 default=1,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                 to='myapp.pensum',
+=======
+                to='api.pensum',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
             ),
         ),
         migrations.CreateModel(
@@ -214,7 +246,11 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name='grupos',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                         to='myapp.horario',
+=======
+                        to='api.horario',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                     ),
                 ),
                 (
@@ -222,12 +258,20 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name='grupos',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                         to='myapp.materia',
+=======
+                        to='api.materia',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                     ),
                 ),
                 (
                     'profesores',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                     models.ManyToManyField(related_name='grupos', to='myapp.profesor'),
+=======
+                    models.ManyToManyField(related_name='grupos', to='api.profesor'),
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                 ),
             ],
         ),
@@ -247,7 +291,11 @@ class Migration(migrations.Migration):
                 (
                     'materias',
                     models.ManyToManyField(
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                         related_name='semestres', to='myapp.materia'
+=======
+                        related_name='semestres', to='api.materia'
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                     ),
                 ),
                 (
@@ -255,7 +303,11 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name='semestres',
+<<<<<<< HEAD:myapp/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                         to='myapp.pensum',
+=======
+                        to='api.pensum',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0009_carrera_departamento_horario_pensum_profesor_and_more.py
                     ),
                 ),
             ],

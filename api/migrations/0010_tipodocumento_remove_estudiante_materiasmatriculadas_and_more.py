@@ -7,7 +7,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
+<<<<<<< HEAD:myapp/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
         ('myapp', '0009_carrera_departamento_horario_pensum_profesor_and_more'),
+=======
+        ('api', '0009_carrera_departamento_horario_pensum_profesor_and_more'),
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
     ]
 
     operations = [
@@ -70,7 +74,11 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
+<<<<<<< HEAD:myapp/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
                 to='myapp.departamento',
+=======
+                to='api.departamento',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
             ),
         ),
         migrations.AlterField(
@@ -79,7 +87,11 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
+<<<<<<< HEAD:myapp/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
                 to='myapp.pensum',
+=======
+                to='api.pensum',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
             ),
         ),
         migrations.AlterField(
@@ -138,7 +150,11 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
+<<<<<<< HEAD:myapp/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
                 to='myapp.tipodocumento',
+=======
+                to='api.tipodocumento',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
             ),
         ),
         migrations.AlterField(
@@ -147,7 +163,11 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
+<<<<<<< HEAD:myapp/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
                 to='myapp.tipodocumento',
+=======
+                to='api.tipodocumento',
+>>>>>>> 4b83840639a769d9d1ca479e56f3ca74d86687c8:api/migrations/0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more.py
             ),
         ),
     ]

@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("myapp", "0004_materia_remove_profesor_materias_profesor_materias"),
+        ("api", "0004_materia_remove_profesor_materias_profesor_materias"),
     ]
 
     operations = [
@@ -85,20 +85,20 @@ class Migration(migrations.Migration):
             model_name="estudiante",
             name="materiasMatriculadas",
             field=models.ManyToManyField(
-                blank=True, related_name="estudiantes_matriculados", to="myapp.materia"
+                blank=True, related_name="estudiantes_matriculados", to="api.materia"
             ),
         ),
         migrations.AddField(
             model_name="materia",
             name="requisito",
             field=models.ManyToManyField(
-                blank=True, related_name="materias_requisito", to="myapp.materia"
+                blank=True, related_name="materias_requisito", to="api.materia"
             ),
         ),
         migrations.AddField(
             model_name="estudiante",
             name="carrera",
-            field=models.ManyToManyField(to="myapp.carrera"),
+            field=models.ManyToManyField(to="api.carrera"),
         ),
         migrations.AddField(
             model_name="carrera",
@@ -106,7 +106,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="carreras",
-                to="myapp.departamento",
+                to="api.departamento",
             ),
         ),
         migrations.CreateModel(
@@ -127,19 +127,19 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="grupos",
-                        to="myapp.materia",
+                        to="api.materia",
                     ),
                 ),
                 (
                     "profesores",
-                    models.ManyToManyField(related_name="grupos", to="myapp.profesor"),
+                    models.ManyToManyField(related_name="grupos", to="api.profesor"),
                 ),
                 (
                     "horario",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="grupos",
-                        to="myapp.horario",
+                        to="api.horario",
                     ),
                 ),
             ],
@@ -165,7 +165,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="notas",
-                        to="myapp.estudiante",
+                        to="api.estudiante",
                     ),
                 ),
                 (
@@ -173,7 +173,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="notas",
-                        to="myapp.materia",
+                        to="api.materia",
                     ),
                 ),
             ],
@@ -184,7 +184,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="carreras",
-                to="myapp.pensum",
+                to="api.pensum",
             ),
         ),
         migrations.CreateModel(
@@ -203,7 +203,7 @@ class Migration(migrations.Migration):
                 (
                     "materias",
                     models.ManyToManyField(
-                        related_name="semestres", to="myapp.materia"
+                        related_name="semestres", to="api.materia"
                     ),
                 ),
                 (
@@ -211,7 +211,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="semestres",
-                        to="myapp.pensum",
+                        to="api.pensum",
                     ),
                 ),
             ],

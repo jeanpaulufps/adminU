@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("myapp", "0002_estudiante_delete_usuario"),
+        ("api", "0002_estudiante_delete_usuario"),
     ]
 
     operations = [
