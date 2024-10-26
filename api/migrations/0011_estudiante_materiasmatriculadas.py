@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapp', '0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more'),
+        ('api', '0010_tipodocumento_remove_estudiante_materiasmatriculadas_and_more'),
     ]
 
     operations = [
@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
             model_name='estudiante',
             name='materiasMatriculadas',
             field=models.ManyToManyField(
-                null=True, related_name='estudiantes_matriculados', to='myapp.materia'
+                null=True, related_name='estudiantes_matriculados', to='api.materia'
             ),
         ),
     ]

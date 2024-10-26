@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapp', '0007_carrera_departamento_carrera_pensum'),
+        ('api', '0007_carrera_departamento_carrera_pensum'),
     ]
 
     operations = [

@@ -1,4 +1,4 @@
-from myapp.models import (
+from api.models import (
     TipoDocumento,
     Usuario,
     Profesor,

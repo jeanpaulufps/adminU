@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapp', '0005_carrera_departamento_horario_pensum_and_more'),
+        ('api', '0005_carrera_departamento_horario_pensum_and_more'),
     ]
 
     operations = [

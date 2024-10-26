@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapp', '0006_remove_carrera_departamento_remove_carrera_pensum'),
+        ('api', '0006_remove_carrera_departamento_remove_carrera_pensum'),
     ]
 
     operations = [
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 default=1,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
-                to='myapp.departamento',
+                to='api.departamento',
             ),
         ),
         migrations.AddField(
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 default=1,
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
-                to='myapp.pensum',
+                to='api.pensum',
             ),
         ),
     ]

@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapp', '0009_carrera_departamento_horario_pensum_profesor_and_more'),
+        ('api', '0009_carrera_departamento_horario_pensum_profesor_and_more'),
     ]
 
     operations = [
@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
-                to='myapp.departamento',
+                to='api.departamento',
             ),
         ),
         migrations.AlterField(
@@ -79,7 +79,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name='carreras',
-                to='myapp.pensum',
+                to='api.pensum',
             ),
         ),
         migrations.AlterField(
@@ -138,7 +138,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
-                to='myapp.tipodocumento',
+                to='api.tipodocumento',
             ),
         ),
         migrations.AlterField(
@@ -147,7 +147,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
-                to='myapp.tipodocumento',
+                to='api.tipodocumento',
             ),
         ),
     ]
