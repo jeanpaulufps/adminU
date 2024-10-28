@@ -7,6 +7,9 @@ class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=50)
     abreviacion = models.CharField(max_length=10)
 
+    def __str__(self):
+        return self.nombre
+
 
 class Usuario(models.Model):
     nombres = models.CharField(max_length=50, default=' ')
@@ -27,27 +30,48 @@ class Usuario(models.Model):
         abstract = True
 
     def __str__(self):
-        return f"{self.nombres} {self.apellidos}"
+        return f"{self.codigo} - {self.nombres} {self.apellidos}"
 
 
 class Pensum(models.Model):
     nombre = models.CharField(max_length=100, default=' ')
     pass
 
+    def __str__(self):
+        return self.nombre
+
 
 class Departamento(models.Model):
     nombre = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre
 
 
 class Profesor(Usuario):
     pass
 
 
+class Aula(models.Model):
+    codigo = models.CharField(max_length=20)
+    estado = models.IntegerField()
+
+    def __self__(self):
+        return self.codigo
+
+
 class Horario(models.Model):
     horaInicio = models.TimeField()
     horaFin = models.TimeField()
     dia = models.IntegerField()
-    aula = models.CharField(max_length=200)
+    aula = models.ForeignKey(
+        Aula, on_delete=models.SET_NULL, related_name="aula", null=True
+    )
+
+    def __str__(self):
+        return (
+            f"Día: {self.dia} ({self.horaInicio} - {self.horaFin}), aula: {self.aula}"
+        )
 
 
 class Carrera(models.Model):
@@ -63,6 +87,9 @@ class Carrera(models.Model):
         Departamento, on_delete=models.CASCADE, related_name="carreras"
     )
 
+    def __self__(self):
+        return f"{self.codigo} - {self.nombre}"
+
 
 class Materia(models.Model):
     nombre = models.CharField(max_length=100)
@@ -72,6 +99,9 @@ class Materia(models.Model):
     requisito = models.ManyToManyField(
         "self", symmetrical=False, related_name="materias_requisito", blank=True
     )
+
+    def __self__(self):
+        return f"{self.codigo} - {self.nombre}"
 
 
 class Estudiante(Usuario):
@@ -93,6 +123,9 @@ class Grupo(models.Model):
         Horario, on_delete=models.CASCADE, related_name="grupos"
     )
 
+    def __self__(self):
+        return f"{self.materia}, codigo: {self.codigo}"
+
 
 class Nota(models.Model):
     primera = models.FloatField()
@@ -111,3 +144,6 @@ class Semestre(models.Model):
         Pensum, on_delete=models.CASCADE, related_name="semestres"
     )
     materias = models.ManyToManyField(Materia, related_name="semestres")
+
+    def __self__(self):
+        return self.numeroSemestre
