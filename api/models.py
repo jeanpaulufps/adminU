@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
 
 # Create your models here.
 
@@ -14,6 +15,7 @@ class TipoDocumento(models.Model):
 class Usuario(models.Model):
     nombres = models.CharField(max_length=50, default=' ')
     apellidos = models.CharField(max_length=50, default=' ')
+    password = models.CharField(max_length=128, null=False, default=' ')
     codigo = models.CharField(max_length=50)
     fechaNacimiento = models.DateField()
     direccion = models.CharField(max_length=255)
@@ -31,6 +33,12 @@ class Usuario(models.Model):
 
     def __str__(self):
         return f"{self.codigo} - {self.nombres} {self.apellidos}"
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)  # Encriptar la contraseña
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
 
 
 class Pensum(models.Model):

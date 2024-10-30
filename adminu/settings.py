@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-n5$=3dveb+q_*_al(37agrz3u))qs@b(-+i$&x)5hjp^&0=j2=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CORS_ORIGIN_ALLOW_ALL = DEBUG
+
 ALLOWED_HOSTS = []
 
 
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'coreapi',
     'api',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -124,4 +127,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'}
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}

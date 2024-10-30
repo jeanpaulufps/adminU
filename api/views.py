@@ -12,10 +12,46 @@ from api.serializers import (
     NotaSerializer,
     SemestreSerializer,
     GrupoSerializer,
+    LoginSerializer,
+    
 )
+from rest_framework.views import APIView
+from .models import Estudiante, Profesor
+from rest_framework.response import Response
+from rest_framework import status
+
 from api import models
 
 # Create your views here.
+
+
+class LoginView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            codigo = serializer.validated_data['codigo']
+            numero_documento = serializer.validated_data['numeroDocumento']
+            password = serializer.validated_data['password']
+
+            # Buscar al estudiante o profesor
+            usuario = (
+                Estudiante.objects.filter(
+                    codigo=codigo, numeroDocumento=numero_documento
+                ).first()
+                or Profesor.objects.filter(
+                    codigo=codigo, numeroDocumento=numero_documento
+                ).first()
+            )
+
+            if usuario and usuario.check_password(password):
+                return Response({'message': 'Login exitoso'}, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {'error': 'Credenciales inválidas'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TipoDocumentoViewSet(viewsets.ModelViewSet):

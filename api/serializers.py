@@ -47,9 +47,37 @@ class MateriaSerializer(serializers.ModelSerializer):
 class EstudianteSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Estudiante
-        fields = '__all__'
-        
-        
+        fields = [
+            'nombres',
+            'apellidos',
+            'codigo',
+            'fechaNacimiento',
+            'direccion',
+            'telefono',
+            'correoElectronico',
+            'correoInstitucional',
+            'fechaIngreso',
+            'numeroDocumento',
+            'tipoDocumento',
+            'password',
+        ]
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }  # Asegúrate de que la contraseña no se devuelva
+
+    def create(self, validated_data):
+        estudiante = models.Estudiante(**validated_data)
+        estudiante.set_password(validated_data['password'])  # Encriptar la contraseña
+        estudiante.save()
+        return estudiante
+
+
+class LoginSerializer(serializers.Serializer):
+    codigo = serializers.CharField()
+    numeroDocumento = serializers.CharField()
+    password = serializers.CharField()
+
+
 class GrupoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Grupo

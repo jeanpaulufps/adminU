@@ -48,9 +48,9 @@ materia_2 = Materia.objects.create(
 )
 
 
-horario = Horario.objects.create(
-    horaInicio='08:00', horaFin='10:00', dia=1, aula='A101'
-)
+# horario = Horario.objects.create(
+#     horaInicio='08:00', horaFin='10:00', dia=1, aula='A101'
+# )
 
 
 profesor = Profesor.objects.create(
@@ -95,8 +95,8 @@ nota = Nota.objects.create(
 )
 
 
-grupo = Grupo.objects.create(codigo='G1', materia=materia_1, horario=horario)
-grupo.profesores.add(profesor)
+# grupo = Grupo.objects.create(codigo='G1', materia=materia_1, horario=Horario)
+# grupo.profesores.add(profesor)
 
 
 semestre = Semestre.objects.create(numeroSemestre=1, pensum=pensum)
