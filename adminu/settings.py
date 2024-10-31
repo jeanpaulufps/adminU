@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'adminu.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'AdminU',  
+        'NAME': 'adminU',  
         'USER': 'root',
         'PASSWORD': 'UFPS2024',
         'HOST': '129.146.249.153',
