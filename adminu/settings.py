@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'adminu.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'adminU',
+        'USER': 'root',
+        'PASSWORD': 'UFPS2024',
+        'HOST': '129.146.249.153',
+        'PORT': '3387',
     }
 }
 
