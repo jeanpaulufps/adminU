@@ -47,20 +47,7 @@ class MateriaSerializer(serializers.ModelSerializer):
 class EstudianteSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Estudiante
-        fields = [
-            'nombres',
-            'apellidos',
-            'codigo',
-            'fechaNacimiento',
-            'direccion',
-            'telefono',
-            'correoElectronico',
-            'correoInstitucional',
-            'fechaIngreso',
-            'numeroDocumento',
-            'tipoDocumento',
-            'password',
-        ]
+        fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True}
         }  # Asegúrate de que la contraseña no se devuelva
