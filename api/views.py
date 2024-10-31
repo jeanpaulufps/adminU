@@ -13,7 +13,6 @@ from api.serializers import (
     SemestreSerializer,
     GrupoSerializer,
     LoginSerializer,
-    
 )
 from rest_framework.views import APIView
 from .models import Estudiante, Profesor
@@ -44,7 +43,16 @@ class LoginView(APIView):
             )
 
             if usuario and usuario.check_password(password):
-                return Response({'message': 'Login exitoso'}, status=status.HTTP_200_OK)
+                # Serializar el objeto de usuario
+                if isinstance(usuario, Estudiante):
+                    usuario_serializado = EstudianteSerializer(usuario).data
+                else:
+                    usuario_serializado = ProfesorSerializer(usuario).data
+
+                return Response(
+                    {'message': 'Login exitoso', 'usuario': usuario_serializado},
+                    status=status.HTTP_200_OK,
+                )
             else:
                 return Response(
                     {'error': 'Credenciales inválidas'},

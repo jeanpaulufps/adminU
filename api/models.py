@@ -113,10 +113,8 @@ class Materia(models.Model):
 
 
 class Estudiante(Usuario):
-    materiasMatriculadas = models.ManyToManyField(
-        Materia, related_name="estudiantes_matriculados", null=True
-    )
-    carrera = models.ManyToManyField(Carrera, blank=False)
+    # materiasMatriculadas = models.ManyToManyField(Materia, null=True)
+    # carrera = models.ManyToManyField(Carrera, blank=False)
     creditosAprobados = models.IntegerField()
     estadoMatricula = models.IntegerField()
 
