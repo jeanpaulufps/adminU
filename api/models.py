@@ -1,5 +1,7 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
+from django.utils import timezone
 
 # Create your models here.
 
@@ -12,21 +14,61 @@ class TipoDocumento(models.Model):
         return self.nombre
 
 
-class Usuario(models.Model):
+class UsuarioManager(BaseUserManager):
+    def create_user(self, correoInstitucional, password=None, **extra_fields):
+        """
+        Crea y guarda un usuario con correoInstitucional y contraseña.
+        """
+        if not correoInstitucional:
+            raise ValueError("El correo institucional debe ser proporcionado.")
+        user = self.model(correoInstitucional=correoInstitucional, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, correoInstitucional, password=None, **extra_fields):
+        """
+        Crea y guarda un superusuario con correoInstitucional y contraseña.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(correoInstitucional, password, **extra_fields)
+
+
+class Usuario(AbstractBaseUser):
     nombres = models.CharField(max_length=50, default=' ')
     apellidos = models.CharField(max_length=50, default=' ')
     password = models.CharField(max_length=128, null=False, default=' ')
+    image = models.CharField(
+        max_length=255, null=False, default='https://loremflickr.com/400/400'
+    )
     codigo = models.CharField(max_length=50)
     fechaNacimiento = models.DateField()
     direccion = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
-    correoElectronico = models.CharField(max_length=50)
-    correoInstitucional = models.CharField(max_length=50)
+    correoElectronico = models.CharField(max_length=50, unique=True)
+    correoInstitucional = models.CharField(max_length=50, unique=True)
     fechaIngreso = models.DateField()
     numeroDocumento = models.CharField(max_length=20)
     tipoDocumento = models.ForeignKey(
         TipoDocumento, on_delete=models.SET_NULL, null=True
     )
+
+    # Campos adicionales necesarios para el sistema de autenticación
+    last_login = models.DateTimeField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    # Define el manager
+    objects = UsuarioManager()
+
+    USERNAME_FIELD = 'correoInstitucional'  # Usamos correoInstitucional como el campo de inicio de sesión
+    REQUIRED_FIELDS = [
+        'nombres',
+        'apellidos',
+        'codigo',
+        'fechaNacimiento',
+    ]  # Otros campos necesarios
 
     class Meta:
         abstract = True
@@ -39,6 +81,9 @@ class Usuario(models.Model):
 
     def check_password(self, raw_password):
         return check_password(raw_password, self.password)
+
+    def get_email_field_name(self):
+        return 'correoInstitucional'  # Define el campo de correo electrónico
 
 
 class Pensum(models.Model):

@@ -13,6 +13,8 @@ from api.serializers import (
     SemestreSerializer,
     GrupoSerializer,
     LoginSerializer,
+    PasswordResetSerializer,
+    PasswordResetConfirmSerializer,
 )
 from rest_framework.views import APIView
 from .models import Estudiante, Profesor
@@ -115,3 +117,37 @@ class NotaViewSet(viewsets.ModelViewSet):
 class SemestreViewSet(viewsets.ModelViewSet):
     queryset = models.Semestre.objects.all()
     serializer_class = SemestreSerializer
+
+
+class PasswordResetView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        serializer = PasswordResetSerializer(
+            data=request.data, context={'request': request}
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "message": "Te hemos enviado un enlace para restablecer tu contraseña."
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetConfirmView(APIView):
+    """
+    Endpoint para confirmar el restablecimiento de la contraseña.
+    """
+
+    def post(self, request, *args, **kwargs):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Contraseña restablecida exitosamente."},
+                status=status.HTTP_200_OK,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
