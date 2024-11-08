@@ -36,8 +36,7 @@ class ProfesorSerializer(serializers.ModelSerializer):
 class HorarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Horario
-        fields = '__all__'
-
+        fields = ['horaInicio', 'horaFin', 'dia', 'materia', 'grupo', 'aula']
 
 class CarreraSerializer(serializers.ModelSerializer):
     class Meta:

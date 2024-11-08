@@ -114,19 +114,40 @@ class Aula(models.Model):
 
 
 class Horario(models.Model):
+    DIA_CHOICES = [
+        (1, 'Lunes'),
+        (2, 'Martes'),
+        (3, 'Miércoles'),
+        (4, 'Jueves'),
+        (5, 'Viernes'),
+        (6, 'Sábado'),
+        (7, 'Domingo'),
+    ]
+
+    materia = models.CharField(max_length=100)
+    grupo = models.CharField(max_length=20)
     horaInicio = models.TimeField()
     horaFin = models.TimeField()
-    dia = models.IntegerField()
+    dia = models.IntegerField(choices=DIA_CHOICES)
     aula = models.ForeignKey(
-        Aula, on_delete=models.SET_NULL, related_name="aula", null=True
+        Aula, on_delete=models.SET_NULL, related_name="horarios", null=True
     )
 
+    def save(self, *args, **kwargs):
+        if self.horaInicio >= self.horaFin:
+            raise ValueError("La hora de inicio debe ser anterior a la hora de fin.")
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return (
-            f"Día: {self.dia} ({self.horaInicio} - {self.horaFin}), aula: {self.aula}"
-        )
+        return f"{self.materia} ({self.grupo}) - Día: {self.dia} ({self.horaInicio} - {self.horaFin}), aula: {self.aula}"
 
+    class Meta:
+        ordering = ['dia', 'horaInicio']
+        verbose_name = 'Horario'
+        verbose_name_plural = 'Horarios'
+        unique_together = ('materia', 'grupo', 'horaInicio', 'aula')  # Ejemplo de restricción
 
+    
 class Carrera(models.Model):
     nombre = models.CharField(max_length=100)
     codigo = models.CharField(max_length=20)

@@ -79,7 +79,7 @@ class ProfesorViewSet(viewsets.ModelViewSet):
     serializer_class = ProfesorSerializer
 
 
-class HorarioViewSet(viewsets.ModelViewSet):
+class HorarioViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Horario.objects.all()
     serializer_class = HorarioSerializer
 
