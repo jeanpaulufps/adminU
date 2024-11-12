@@ -21,14 +21,10 @@ urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginView.as_view(), name='login'),
     path('password_reset/', PasswordResetView.as_view(), name='api_password_reset'),
-    # path(
-    #     'password_reset/confirm/<uidb64>/<token>/',
-    #     PasswordResetConfirmView.as_view(),
-    #     name='api_password_reset_confirm',
-    # ),
     path(
         'password_reset/confirm/',
         PasswordResetConfirmView.as_view(),
         name='api_password_reset_confirm',
     ),
+      path('estudiantes/<int:pk>/materias/', views.EstudianteMateriasView.as_view(), name='estudiante-materias'),
 ]

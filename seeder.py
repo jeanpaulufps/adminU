@@ -12,6 +12,7 @@ from api.models import (
     Nota,
     Semestre,
 )
+from django.contrib.auth.hashers import make_password
 
 
 tipo_documento_1 = TipoDocumento.objects.create(nombre='Cédula', abreviacion='CC')
@@ -72,7 +73,7 @@ estudiante = Estudiante.objects.create(
     nombres='Ana',
     apellidos='Gómez',
     codigo='EST001',
-    password='123',
+    password=make_password('123'),
     image='https://loremflickr.com/400/400',
     fechaNacimiento='2000-05-20',
     direccion='Calle 456',

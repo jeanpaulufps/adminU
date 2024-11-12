@@ -38,6 +38,7 @@ class HorarioSerializer(serializers.ModelSerializer):
         model = models.Horario
         fields = ['horaInicio', 'horaFin', 'dia', 'materia', 'grupo', 'aula']
 
+
 class CarreraSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Carrera
@@ -45,9 +46,32 @@ class CarreraSerializer(serializers.ModelSerializer):
 
 
 class MateriaSerializer(serializers.ModelSerializer):
+    notas = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Materia
         fields = '__all__'
+
+    def get_notas(self, obj):
+        # Filtrar las notas por el estudiante y la materia
+        estudiante = self.context.get('estudiante')
+        notas = models.Nota.objects.filter(materia=obj, estudiante=estudiante)
+        return NotaSerializer(notas, many=True).data
+
+
+class EstudianteMateriasSerializer(serializers.ModelSerializer):
+    # materiasMatriculadas = MateriaSerializer(many=True)
+    materiasMatriculadas = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Estudiante
+        fields = ['materiasMatriculadas']
+
+    def get_materiasMatriculadas(self, obj):
+        materias = obj.materiasMatriculadas.all()
+        return MateriaSerializer(
+            materias, many=True, context={'estudiante': obj}
+        ).data
 
 
 class EstudianteSerializer(serializers.ModelSerializer):
@@ -78,9 +102,14 @@ class GrupoSerializer(serializers.ModelSerializer):
 
 
 class NotaSerializer(serializers.ModelSerializer):
+    promedio = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Nota
-        fields = '__all__'
+        fields = ['primera', 'segunda', 'tercera', 'cuarta', 'promedio']
+
+    def get_promedio(self, obj):
+        return (obj.primera + obj.segunda + obj.tercera + obj.cuarta) / 4
 
 
 class SemestreSerializer(serializers.ModelSerializer):

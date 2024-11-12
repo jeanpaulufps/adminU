@@ -15,11 +15,16 @@ from api.serializers import (
     LoginSerializer,
     PasswordResetSerializer,
     PasswordResetConfirmSerializer,
+    EstudianteMateriasSerializer,
 )
 from rest_framework.views import APIView
 from .models import Estudiante, Profesor
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics
+
+# from rest_framework.permissions import IsAuthenticated
+
 
 from api import models
 
@@ -93,6 +98,15 @@ class MateriaViewSet(viewsets.ModelViewSet):
     queryset = models.Materia.objects.all()
     serializer_class = MateriaSerializer
 
+
+class EstudianteMateriasView(generics.RetrieveAPIView):
+    queryset = Estudiante.objects.all()
+    serializer_class = EstudianteMateriasSerializer
+    # permission_classes = [IsAuthenticated]  # Ajusta los permisos según tus necesidades
+
+    def get_object(self):
+        estudiante_id = self.kwargs['pk']
+        return Estudiante.objects.get(id=estudiante_id)
 
 class EstudianteViewSet(viewsets.ModelViewSet):
     queryset = models.Estudiante.objects.all()

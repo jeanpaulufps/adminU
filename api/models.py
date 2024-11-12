@@ -109,7 +109,7 @@ class Aula(models.Model):
     codigo = models.CharField(max_length=20)
     estado = models.IntegerField()
 
-    def __self__(self):
+    def __str__(self):
         return self.codigo
 
 
@@ -145,9 +145,14 @@ class Horario(models.Model):
         ordering = ['dia', 'horaInicio']
         verbose_name = 'Horario'
         verbose_name_plural = 'Horarios'
-        unique_together = ('materia', 'grupo', 'horaInicio', 'aula')  # Ejemplo de restricción
+        unique_together = (
+            'materia',
+            'grupo',
+            'horaInicio',
+            'aula',
+        )  # Ejemplo de restricción
 
-    
+
 class Carrera(models.Model):
     nombre = models.CharField(max_length=100)
     codigo = models.CharField(max_length=20)
@@ -161,7 +166,7 @@ class Carrera(models.Model):
         Departamento, on_delete=models.CASCADE, related_name="carreras"
     )
 
-    def __self__(self):
+    def __str__(self):
         return f"{self.codigo} - {self.nombre}"
 
 
@@ -174,12 +179,14 @@ class Materia(models.Model):
         "self", symmetrical=False, related_name="materias_requisito", blank=True
     )
 
-    def __self__(self):
+    def __str__(self):
         return f"{self.codigo} - {self.nombre}"
 
 
 class Estudiante(Usuario):
-    # materiasMatriculadas = models.ManyToManyField(Materia, null=True)
+    materiasMatriculadas = models.ManyToManyField(
+        Materia, related_name="estudiantes_matriculados", blank=True
+    )
     # carrera = models.ManyToManyField(Carrera, blank=False)
     creditosAprobados = models.IntegerField()
     estadoMatricula = models.IntegerField()
@@ -195,7 +202,7 @@ class Grupo(models.Model):
         Horario, on_delete=models.CASCADE, related_name="grupos"
     )
 
-    def __self__(self):
+    def __str__(self):
         return f"{self.materia}, codigo: {self.codigo}"
 
 
@@ -217,5 +224,5 @@ class Semestre(models.Model):
     )
     materias = models.ManyToManyField(Materia, related_name="semestres")
 
-    def __self__(self):
+    def __str__(self):
         return self.numeroSemestre
