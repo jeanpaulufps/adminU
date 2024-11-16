@@ -42,6 +42,7 @@ class Usuario(AbstractBaseUser):
     fechaNacimiento = models.DateField()
     direccion = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
+    celular = models.CharField(max_length=20)
     correoElectronico = models.CharField(max_length=50, unique=True)
     correoInstitucional = models.CharField(max_length=50, unique=True)
     fechaIngreso = models.DateField()
