@@ -2,7 +2,13 @@ from django.urls import path, include
 from . import views
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
-from .views import LoginView, PasswordResetView, PasswordResetConfirmView
+from .views import (
+    LoginView,
+    PasswordResetView,
+    PasswordResetConfirmView,
+    EstudianteHorarioView,
+    CrearHorarioView,
+)
 
 router = routers.DefaultRouter()
 router.register(r'tipos-documento', views.TipoDocumentoViewSet)
@@ -26,5 +32,15 @@ urlpatterns = [
         PasswordResetConfirmView.as_view(),
         name='api_password_reset_confirm',
     ),
-      path('estudiantes/<int:pk>/materias/', views.EstudianteMateriasView.as_view(), name='estudiante-materias'),
+    path(
+        'estudiantes/<int:pk>/materias/',
+        views.EstudianteMateriasView.as_view(),
+        name='estudiante-materias',
+    ),
+    path(
+        'estudiantes/<int:pk>/horario/',
+        EstudianteHorarioView.as_view(),
+        name='estudiante-horario',
+    ),
+    path('horarios/', CrearHorarioView.as_view(), name='crear-horario'),
 ]
