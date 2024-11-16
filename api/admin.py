@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from api.models import (
     Pensum,
     Departamento,
@@ -12,21 +11,11 @@ from api.models import (
     Nota,
     Semestre,
     TipoDocumento,
+    Aula,
 )
 
 # from api import models
-
 # Register your models here.
-
-admin.site.register(TipoDocumento)
-admin.site.register(Pensum)
-admin.site.register(Departamento)
-admin.site.register(Profesor)
-admin.site.register(Horario)
-admin.site.register(Carrera)
-admin.site.register(Materia)
-admin.site.register(Grupo)
-admin.site.register(Semestre)
 
 
 class NotaAdmin(admin.ModelAdmin):
@@ -53,9 +42,6 @@ class NotaAdmin(admin.ModelAdmin):
     promedio.short_description = 'Promedio'
 
 
-admin.site.register(Nota, NotaAdmin)
-
-
 class NotaInline(admin.TabularInline):
     model = Nota
     extra = 1  # Número de formularios extra en blanco
@@ -78,4 +64,40 @@ class EstudianteAdmin(admin.ModelAdmin):
     inlines = [NotaInline]
 
 
+class HorarioInline(admin.TabularInline):
+    model = Horario
+    extra = 1
+    # fields = ['grupo', 'horaInicio', 'horaFin', 'dia', 'aula']
+    fields = ['horaInicio', 'horaFin', 'dia', 'aula']
+    ordering = ['dia', 'horaInicio']
+
+
+class MateriaAdmin(admin.ModelAdmin):
+    list_display = [
+        'id',
+        'nombre',
+        'creditos',
+    ]
+    inlines = [HorarioInline]
+
+
+class HorarioAdmin(admin.ModelAdmin):
+    # list_display = ['materia', 'grupo', 'dia', 'horaInicio', 'horaFin', 'aula']
+    list_display = ['materia', 'dia', 'horaInicio', 'horaFin', 'aula']
+    list_filter = ['dia', 'materia']
+    # search_fields = ['materia__nombre', 'grupo', 'aula__nombre']
+    search_fields = ['materia__nombre', 'aula__nombre']
+
+
+admin.site.register(Materia, MateriaAdmin)
+admin.site.register(Horario, HorarioAdmin)
+admin.site.register(Nota, NotaAdmin)
 admin.site.register(Estudiante, EstudianteAdmin)
+admin.site.register(TipoDocumento)
+admin.site.register(Pensum)
+admin.site.register(Departamento)
+admin.site.register(Profesor)
+admin.site.register(Carrera)
+admin.site.register(Grupo)
+admin.site.register(Semestre)
+admin.site.register(Aula)
