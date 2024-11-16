@@ -1,60 +1,51 @@
 # from django.shortcuts import render
 from rest_framework import viewsets
-from api.serializers import (
-    TipoDocumentoSerializer,
-    PensumSerializer,
-    DepartamentoSerializer,
-    ProfesorSerializer,
-    HorarioSerializer,
-    CarreraSerializer,
-    MateriaSerializer,
-    EstudianteSerializer,
-    NotaSerializer,
-    SemestreSerializer,
-    GrupoSerializer,
-    LoginSerializer,
-    PasswordResetSerializer,
-    PasswordResetConfirmSerializer,
-    EstudianteMateriasSerializer,
-)
+from api import serializers
 from rest_framework.views import APIView
-from .models import Estudiante, Profesor
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 
 # from rest_framework.permissions import IsAuthenticated
-
-
 from api import models
 
 # Create your views here.
 
 
+class CrearHorarioView(generics.CreateAPIView):
+    queryset = models.Horario.objects.all()
+    serializer_class = serializers.HorarioCreateSerializer
+
+
+class EstudianteHorarioView(generics.RetrieveAPIView):
+    queryset = models.Estudiante.objects.all()
+    serializer_class = serializers.EstudianteHorarioSerializer
+    # permission_classes = [IsAuthenticated]
+
+
 class LoginView(APIView):
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
+        serializer = serializers.LoginSerializer(data=request.data)
         if serializer.is_valid():
             codigo = serializer.validated_data['codigo']
             numero_documento = serializer.validated_data['numeroDocumento']
             password = serializer.validated_data['password']
 
-            # Buscar al estudiante o profesor
             usuario = (
-                Estudiante.objects.filter(
+                models.Estudiante.objects.filter(
                     codigo=codigo, numeroDocumento=numero_documento
                 ).first()
-                or Profesor.objects.filter(
+                or models.Profesor.objects.filter(
                     codigo=codigo, numeroDocumento=numero_documento
                 ).first()
             )
 
             if usuario and usuario.check_password(password):
-                # Serializar el objeto de usuario
-                if isinstance(usuario, Estudiante):
-                    usuario_serializado = EstudianteSerializer(usuario).data
+
+                if isinstance(usuario, models.Estudiante):
+                    usuario_serializado = serializers.EstudianteSerializer(usuario).data
                 else:
-                    usuario_serializado = ProfesorSerializer(usuario).data
+                    usuario_serializado = serializers.ProfesorSerializer(usuario).data
 
                 return Response(
                     {'message': 'Login exitoso', 'usuario': usuario_serializado},
@@ -71,72 +62,73 @@ class LoginView(APIView):
 
 class TipoDocumentoViewSet(viewsets.ModelViewSet):
     queryset = models.TipoDocumento.objects.all()
-    serializer_class = TipoDocumentoSerializer
+    serializer_class = serializers.TipoDocumentoSerializer
 
 
 class PensumViewSet(viewsets.ModelViewSet):
     queryset = models.Pensum.objects.all()
-    serializer_class = PensumSerializer
+    serializer_class = serializers.PensumSerializer
 
 
 class ProfesorViewSet(viewsets.ModelViewSet):
     queryset = models.Profesor.objects.all()
-    serializer_class = ProfesorSerializer
+    serializer_class = serializers.ProfesorSerializer
 
 
 class HorarioViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Horario.objects.all()
-    serializer_class = HorarioSerializer
+    serializer_class = serializers.HorarioSerializer
 
 
 class CarreraViewSet(viewsets.ModelViewSet):
     queryset = models.Carrera.objects.all()
-    serializer_class = CarreraSerializer
+    serializer_class = serializers.CarreraSerializer
 
 
 class MateriaViewSet(viewsets.ModelViewSet):
     queryset = models.Materia.objects.all()
-    serializer_class = MateriaSerializer
+    serializer_class = serializers.MateriaSerializer
 
 
 class EstudianteMateriasView(generics.RetrieveAPIView):
-    queryset = Estudiante.objects.all()
-    serializer_class = EstudianteMateriasSerializer
-    # permission_classes = [IsAuthenticated]  # Ajusta los permisos según tus necesidades
+    queryset = models.Estudiante.objects.all()
+    serializer_class = serializers.EstudianteMateriasSerializer
+    # permission_classes = [IsAuthenticated]
 
     def get_object(self):
         estudiante_id = self.kwargs['pk']
-        return Estudiante.objects.get(id=estudiante_id)
+        return models.Estudiante.objects.get(id=estudiante_id)
+
 
 class EstudianteViewSet(viewsets.ModelViewSet):
     queryset = models.Estudiante.objects.all()
-    serializer_class = EstudianteSerializer
+    serializer_class = serializers.EstudianteSerializer
 
 
 class GrupoViewSet(viewsets.ModelViewSet):
     queryset = models.Grupo.objects.all()
-    serializer_class = GrupoSerializer
+    serializer_class = serializers.GrupoSerializer
 
 
 class DepartamentoViewSet(viewsets.ModelViewSet):
     queryset = models.Departamento.objects.all()
-    serializer_class = DepartamentoSerializer
+    serializer_class = serializers.DepartamentoSerializer
 
 
 class NotaViewSet(viewsets.ModelViewSet):
     queryset = models.Nota.objects.all()
-    serializer_class = NotaSerializer
+    serializer_class = serializers.NotaSerializer
 
 
 class SemestreViewSet(viewsets.ModelViewSet):
     queryset = models.Semestre.objects.all()
-    serializer_class = SemestreSerializer
+    serializer_class = serializers.SemestreSerializer
 
 
 class PasswordResetView(APIView):
 
     def post(self, request, *args, **kwargs):
-        serializer = PasswordResetSerializer(
+        serializer = serializers.PasswordResetSerializer(
             data=request.data, context={'request': request}
         )
         if serializer.is_valid():
@@ -152,12 +144,9 @@ class PasswordResetView(APIView):
 
 
 class PasswordResetConfirmView(APIView):
-    """
-    Endpoint para confirmar el restablecimiento de la contraseña.
-    """
 
     def post(self, request, *args, **kwargs):
-        serializer = PasswordResetConfirmSerializer(data=request.data)
+        serializer = serializers.PasswordResetConfirmSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(
