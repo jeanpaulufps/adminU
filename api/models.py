@@ -16,9 +16,7 @@ class TipoDocumento(models.Model):
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, correoInstitucional, password=None, **extra_fields):
-        """
-        Crea y guarda un usuario con correoInstitucional y contraseña.
-        """
+
         if not correoInstitucional:
             raise ValueError("El correo institucional debe ser proporcionado.")
         user = self.model(correoInstitucional=correoInstitucional, **extra_fields)
@@ -27,9 +25,7 @@ class UsuarioManager(BaseUserManager):
         return user
 
     def create_superuser(self, correoInstitucional, password=None, **extra_fields):
-        """
-        Crea y guarda un superusuario con correoInstitucional y contraseña.
-        """
+
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(correoInstitucional, password, **extra_fields)
@@ -54,21 +50,19 @@ class Usuario(AbstractBaseUser):
         TipoDocumento, on_delete=models.SET_NULL, null=True
     )
 
-    # Campos adicionales necesarios para el sistema de autenticación
     last_login = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
-    # Define el manager
     objects = UsuarioManager()
 
-    USERNAME_FIELD = 'correoInstitucional'  # Usamos correoInstitucional como el campo de inicio de sesión
+    USERNAME_FIELD = 'correoInstitucional'
     REQUIRED_FIELDS = [
         'nombres',
         'apellidos',
         'codigo',
         'fechaNacimiento',
-    ]  # Otros campos necesarios
+    ]
 
     class Meta:
         abstract = True
@@ -77,13 +71,13 @@ class Usuario(AbstractBaseUser):
         return f"{self.codigo} - {self.nombres} {self.apellidos}"
 
     def set_password(self, raw_password):
-        self.password = make_password(raw_password)  # Encriptar la contraseña
+        self.password = make_password(raw_password)
 
     def check_password(self, raw_password):
         return check_password(raw_password, self.password)
 
     def get_email_field_name(self):
-        return 'correoInstitucional'  # Define el campo de correo electrónico
+        return 'correoInstitucional'
 
 
 class Pensum(models.Model):
@@ -111,46 +105,6 @@ class Aula(models.Model):
 
     def __str__(self):
         return self.codigo
-
-
-class Horario(models.Model):
-    DIA_CHOICES = [
-        (1, 'Lunes'),
-        (2, 'Martes'),
-        (3, 'Miércoles'),
-        (4, 'Jueves'),
-        (5, 'Viernes'),
-        (6, 'Sábado'),
-        (7, 'Domingo'),
-    ]
-
-    materia = models.CharField(max_length=100)
-    grupo = models.CharField(max_length=20)
-    horaInicio = models.TimeField()
-    horaFin = models.TimeField()
-    dia = models.IntegerField(choices=DIA_CHOICES)
-    aula = models.ForeignKey(
-        Aula, on_delete=models.SET_NULL, related_name="horarios", null=True
-    )
-
-    def save(self, *args, **kwargs):
-        if self.horaInicio >= self.horaFin:
-            raise ValueError("La hora de inicio debe ser anterior a la hora de fin.")
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"{self.materia} ({self.grupo}) - Día: {self.dia} ({self.horaInicio} - {self.horaFin}), aula: {self.aula}"
-
-    class Meta:
-        ordering = ['dia', 'horaInicio']
-        verbose_name = 'Horario'
-        verbose_name_plural = 'Horarios'
-        unique_together = (
-            'materia',
-            'grupo',
-            'horaInicio',
-            'aula',
-        )  # Ejemplo de restricción
 
 
 class Carrera(models.Model):
@@ -192,20 +146,6 @@ class Estudiante(Usuario):
     estadoMatricula = models.IntegerField()
 
 
-class Grupo(models.Model):
-    codigo = models.CharField(max_length=20)
-    materia = models.ForeignKey(
-        Materia, on_delete=models.CASCADE, related_name="grupos"
-    )
-    profesores = models.ManyToManyField(Profesor, related_name="grupos")
-    horario = models.ForeignKey(
-        Horario, on_delete=models.CASCADE, related_name="grupos"
-    )
-
-    def __str__(self):
-        return f"{self.materia}, codigo: {self.codigo}"
-
-
 class Nota(models.Model):
     primera = models.FloatField()
     segunda = models.FloatField()
@@ -226,3 +166,48 @@ class Semestre(models.Model):
 
     def __str__(self):
         return self.numeroSemestre
+
+
+class Horario(models.Model):
+    DIA_CHOICES = [
+        (1, 'Lunes'),
+        (2, 'Martes'),
+        (3, 'Miércoles'),
+        (4, 'Jueves'),
+        (5, 'Viernes'),
+        (6, 'Sábado'),
+        (7, 'Domingo'),
+    ]
+
+    materia = models.ForeignKey(
+        Materia, on_delete=models.CASCADE, related_name="horarios"
+    )  
+    # grupo = models.CharField(max_length=20)
+    horaInicio = models.TimeField()
+    horaFin = models.TimeField()
+    dia = models.IntegerField(choices=DIA_CHOICES)
+    aula = models.ForeignKey(
+        Aula, on_delete=models.SET_NULL, related_name="horarios", null=True
+    )
+
+    def save(self, *args, **kwargs):
+        if self.horaInicio >= self.horaFin:
+            raise ValueError("La hora de inicio debe ser anterior a la hora de fin.")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.materia.nombre} (Día: {self.dia} ({self.horaInicio} - {self.horaFin}), aula: {self.aula}"
+
+
+class Grupo(models.Model):
+    codigo = models.CharField(max_length=20)
+    materia = models.ForeignKey(
+        Materia, on_delete=models.CASCADE, related_name="grupos"
+    )
+    profesores = models.ManyToManyField(Profesor, related_name="grupos")
+    horario = models.ForeignKey(
+        Horario, on_delete=models.CASCADE, related_name="grupos"
+    )
+
+    def __str__(self):
+        return f"{self.materia}, codigo: {self.codigo}"
