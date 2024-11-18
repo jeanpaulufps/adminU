@@ -12,6 +12,79 @@ from api import models
 # Create your views here.
 
 
+class MateriasNoMatriculadasView(APIView):
+    def get(self, request, estudiante_id, *args, **kwargs):
+        try:
+            estudiante = models.Estudiante.objects.get(id=estudiante_id)
+        except models.Estudiante.DoesNotExist:
+            return Response(
+                {"detail": "El estudiante no existe."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        todas_materias = models.Materia.objects.all()
+        materias_matriculadas = estudiante.materiasMatriculadas.all()
+        materias_no_matriculadas = todas_materias.difference(materias_matriculadas)
+
+        serializer = serializers.MateriaSerializer(materias_no_matriculadas, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class MateriasMatriculadasView(APIView):
+    def get(self, request, estudiante_id, *args, **kwargs):
+        try:
+            estudiante = models.Estudiante.objects.get(id=estudiante_id)
+        except models.Estudiante.DoesNotExist:
+            return Response(
+                {"detail": "El estudiante no existe."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        materias_matriculadas = estudiante.materiasMatriculadas.all()
+        serializer = serializers.MateriaSerializer(materias_matriculadas, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class GestionMateriasView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = serializers.IncluirCancelarMateriaSerializer(data=request.data)
+        if serializer.is_valid():
+            estudiante = serializer.validated_data['estudiante']
+            materia = serializer.validated_data['materia']
+
+            if materia in estudiante.materiasMatriculadas.all():
+                return Response(
+                    {"detail": "La materia ya está incluida."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            estudiante.materiasMatriculadas.add(materia)
+            return Response(
+                {"detail": f"Materia '{materia.nombre}' incluida exitosamente."},
+                status=status.HTTP_200_OK,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        serializer = serializers.IncluirCancelarMateriaSerializer(data=request.data)
+        if serializer.is_valid():
+            estudiante = serializer.validated_data['estudiante']
+            materia = serializer.validated_data['materia']
+
+            if materia not in estudiante.materiasMatriculadas.all():
+                return Response(
+                    {"detail": "La materia no está incluida."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            estudiante.materiasMatriculadas.remove(materia)
+            return Response(
+                {"detail": f"Materia '{materia.nombre}' cancelada exitosamente."},
+                status=status.HTTP_200_OK,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CrearHorarioView(generics.CreateAPIView):
     queryset = models.Horario.objects.all()
     serializer_class = serializers.HorarioCreateSerializer

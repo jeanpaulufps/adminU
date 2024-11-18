@@ -8,6 +8,9 @@ from .views import (
     PasswordResetConfirmView,
     EstudianteHorarioView,
     CrearHorarioView,
+    GestionMateriasView,
+    MateriasNoMatriculadasView,
+    MateriasMatriculadasView,
 )
 
 router = routers.DefaultRouter()
@@ -43,4 +46,19 @@ urlpatterns = [
         name='estudiante-horario',
     ),
     path('horarios/', CrearHorarioView.as_view(), name='crear-horario'),
+    path(
+        'incluir-cancelar-materias/',
+        GestionMateriasView.as_view(),
+        name='gestion-materias',
+    ),
+    path(
+        'estudiantes/<int:estudiante_id>/materias/no-matriculadas/',
+        MateriasNoMatriculadasView.as_view(),
+        name='materias-no-matriculadas',
+    ),
+    path(
+        'estudiantes/<int:estudiante_id>/materias/matriculadas/',
+        MateriasMatriculadasView.as_view(),
+        name='materias-matriculadas',
+    ),
 ]

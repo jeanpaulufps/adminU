@@ -9,6 +9,29 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode
 
 
+class IncluirCancelarMateriaSerializer(serializers.Serializer):
+    estudiante_id = serializers.IntegerField()
+    materia_id = serializers.IntegerField()
+
+    def validate(self, data):
+        estudiante_id = data.get('estudiante_id')
+        materia_id = data.get('materia_id')
+
+        try:
+            estudiante = models.Estudiante.objects.get(id=estudiante_id)
+            data['estudiante'] = estudiante
+        except models.Estudiante.DoesNotExist:
+            raise serializers.ValidationError("El estudiante no existe.")
+
+        try:
+            materia = models.Materia.objects.get(id=materia_id)
+            data['materia'] = materia
+        except models.Materia.DoesNotExist:
+            raise serializers.ValidationError("La materia no existe.")
+
+        return data
+
+
 class TipoDocumentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TipoDocumento
@@ -34,14 +57,14 @@ class ProfesorSerializer(serializers.ModelSerializer):
 
 
 class HorarioSerializer(serializers.ModelSerializer):
-    materia = serializers.CharField(source="materia.nombre") 
+    materia = serializers.CharField(source="materia.nombre")
     aula = serializers.CharField(source="aula.codigo", default=None)
 
     dia_nombre = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Horario
-        fields = ["materia",  "horaInicio", "horaFin", "dia", "dia_nombre", "aula"]
+        fields = ["materia", "horaInicio", "horaFin", "dia", "dia_nombre", "aula"]
 
     def get_dia_nombre(self, obj):
         dias = {
@@ -55,6 +78,7 @@ class HorarioSerializer(serializers.ModelSerializer):
         }
         return dias.get(obj.dia, "Desconocido")
 
+
 class CarreraSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Carrera
@@ -67,9 +91,6 @@ class MateriaHorarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Materia
         fields = '__all__'
-
-
-from rest_framework import serializers
 
 
 class HorarioCreateSerializer(serializers.ModelSerializer):
@@ -90,6 +111,7 @@ class EstudianteHorarioSerializer(serializers.ModelSerializer):
 
 class MateriaSerializer(serializers.ModelSerializer):
     notas = serializers.SerializerMethodField()
+    horarios = HorarioSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Materia
