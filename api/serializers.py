@@ -256,3 +256,46 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         password = self.validated_data['new_password']
         user.set_password(password)
         user.save()
+
+
+class ComentarioSerializer(serializers.ModelSerializer):
+    estudiante = serializers.CharField(source="estudiante.nombres")
+
+    class Meta:
+        model = models.Comentario
+        fields = '__all__'
+
+
+class PublicacionSerializer(serializers.ModelSerializer):
+    estudiante = serializers.CharField(source="estudiante.nombres")
+    # comentarios = ComentarioSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Publicacion
+        fields = '__all__'
+
+
+class ForoSerializer(serializers.ModelSerializer):
+    materia = serializers.CharField(source="materia.nombre")
+    # publicaciones = PublicacionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Foro
+        fields = '__all__'
+
+
+class PublicacionComentariosSerializer(serializers.ModelSerializer):
+    estudiante_nombre = serializers.CharField(source="estudiante.nombres", read_only=True)
+    comentarios = ComentarioSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Publicacion
+        fields = [
+            "id",
+            "titulo",
+            "contenido",
+            "fecha_creacion",
+            "fecha_actualizacion",
+            "estudiante_nombre",
+            "comentarios",  # Incluye los comentarios relacionados
+        ]

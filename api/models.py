@@ -182,7 +182,7 @@ class Horario(models.Model):
 
     materia = models.ForeignKey(
         Materia, on_delete=models.CASCADE, related_name="horarios"
-    )  
+    )
     # grupo = models.CharField(max_length=20)
     horaInicio = models.TimeField()
     horaFin = models.TimeField()
@@ -212,3 +212,44 @@ class Grupo(models.Model):
 
     def __str__(self):
         return f"{self.materia}, codigo: {self.codigo}"
+
+
+class Foro(models.Model):
+    materia = models.OneToOneField(
+        Materia, on_delete=models.CASCADE, related_name="foro"
+    )
+    titulo = models.CharField(max_length=255)
+    descripcion = models.TextField()
+
+    def __str__(self):
+        return f"Foro de {self.materia.nombre}"
+
+
+class Publicacion(models.Model):
+    foro = models.ForeignKey(
+        Foro, on_delete=models.CASCADE, related_name="publicaciones"
+    )
+    estudiante = models.ForeignKey(
+        Estudiante, on_delete=models.CASCADE, related_name="publicaciones"
+    )
+    titulo = models.CharField(max_length=255)
+    contenido = models.TextField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.titulo
+
+
+class Comentario(models.Model):
+    publicacion = models.ForeignKey(
+        Publicacion, on_delete=models.CASCADE, related_name="comentarios"
+    )
+    estudiante = models.ForeignKey(
+        Estudiante, on_delete=models.CASCADE, related_name="comentarios"
+    )
+    contenido = models.TextField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comentario de {self.estudiante.nombres} en {self.publicacion.titulo}"

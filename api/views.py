@@ -227,3 +227,162 @@ class PasswordResetConfirmView(APIView):
                 status=status.HTTP_200_OK,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ForoView(APIView):
+    def get(self, request, materia_id, *args, **kwargs):
+        try:
+            foro = models.Foro.objects.get(materia_id=materia_id)
+        except models.Foro.DoesNotExist:
+            return Response(
+                {"detail": "El foro de esta materia no existe."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = serializers.ForoSerializer(foro)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, materia_id, *args, **kwargs):
+        try:
+            materia = models.Materia.objects.get(id=materia_id)
+        except models.Materia.DoesNotExist:
+            return Response(
+                {"detail": "Materia no encontrada."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        data = request.data
+        data["materia"] = materia.id
+
+        serializer = serializers.ForoSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PublicacionView(APIView):
+    def get(self, request, foro_id, *args, **kwargs):
+        try:
+            foro = models.Foro.objects.get(id=foro_id)
+        except models.Foro.DoesNotExist:
+            return Response(
+                {"detail": "Foro no encontrado."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        publicaciones = foro.publicaciones.all()
+        serializer = serializers.PublicacionSerializer(publicaciones, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, foro_id, *args, **kwargs):
+        try:
+            foro = models.Foro.objects.get(id=foro_id)
+        except models.Foro.DoesNotExist:
+            return Response(
+                {"detail": "Foro no encontrado."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        data = request.data
+        data["foro"] = foro.id
+        data["estudiante"] = request.user.id
+
+        serializer = serializers.PublicacionSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, publicacion_id, *args, **kwargs):
+        try:
+            publicacion = models.Publicacion.objects.get(id=publicacion_id)
+        except models.Publicacion.DoesNotExist:
+            return Response(
+                {"detail": "Publicación no encontrada."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        if publicacion.estudiante != request.user:
+            return Response(
+                {"detail": "No tienes permiso para editar esta publicación."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        serializer = serializers.PublicacionSerializer(
+            publicacion, data=request.data, partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, publicacion_id, *args, **kwargs):
+        try:
+            publicacion = models.Publicacion.objects.get(id=publicacion_id)
+        except models.Publicacion.DoesNotExist:
+            return Response(
+                {"detail": "Publicación no encontrada."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        if publicacion.estudiante != request.user:
+            return Response(
+                {"detail": "No tienes permiso para eliminar esta publicación."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        publicacion.delete()
+        return Response(
+            {"detail": "Publicación eliminada."}, status=status.HTTP_204_NO_CONTENT
+        )
+
+
+class ComentarioView(APIView):
+    def post(self, request, publicacion_id, *args, **kwargs):
+        try:
+            publicacion = models.Publicacion.objects.get(id=publicacion_id)
+        except models.Publicacion.DoesNotExist:
+            return Response(
+                {"detail": "Publicación no encontrada."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        data = request.data
+        data["publicacion"] = publicacion.id
+        data["estudiante"] = request.user.id
+
+        serializer = serializers.ComentarioSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ForosEstudianteView(APIView):
+    def get(self, request, estudiante_id):
+        try:
+            estudiante = models.Estudiante.objects.get(id=estudiante_id)
+            materias_ids = estudiante.materiasMatriculadas.values_list('id', flat=True)
+            foros = models.Foro.objects.filter(materia__id__in=materias_ids)
+            serializer = serializers.ForoSerializer(foros, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except models.Estudiante.DoesNotExist:
+            return Response({"error": "Estudiante no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class PublicacionesForoView(APIView):
+    def get(self, request, foro_id):
+        try:
+            foro = models.Foro.objects.get(id=foro_id)
+            publicaciones = foro.publicaciones.all()
+            serializer = serializers.PublicacionSerializer(publicaciones, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except models.Foro.DoesNotExist:
+            return Response({"error": "Foro no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+class PublicacionComentariosView(APIView):
+    def get(self, request, publicacion_id):
+        try:
+            publicacion = models.Publicacion.objects.get(id=publicacion_id)
+            serializer = serializers.PublicacionComentariosSerializer(publicacion)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except models.Publicacion.DoesNotExist:
+            return Response({"error": "Publicación no encontrada"}, status=status.HTTP_404_NOT_FOUND)

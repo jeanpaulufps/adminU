@@ -4,6 +4,8 @@ from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 from .views import (
     LoginView,
+    PublicacionesForoView,
+    PublicacionComentariosView,
     PasswordResetView,
     PasswordResetConfirmView,
     EstudianteHorarioView,
@@ -11,6 +13,12 @@ from .views import (
     GestionMateriasView,
     MateriasNoMatriculadasView,
     MateriasMatriculadasView,
+    ForoView,
+    PublicacionView,
+    ComentarioView,
+    PublicacionView,
+    ForosEstudianteView,
+    PublicacionComentariosView,
 )
 
 router = routers.DefaultRouter()
@@ -60,5 +68,36 @@ urlpatterns = [
         'estudiantes/<int:estudiante_id>/materias/matriculadas/',
         MateriasMatriculadasView.as_view(),
         name='materias-matriculadas',
+    ),
+    path('materias/<int:materia_id>/foro/', ForoView.as_view(), name='foro'),
+    path(
+        'foros/<int:foro_id>/publicaciones/',
+        PublicacionView.as_view(),
+        name='publicaciones',
+    ),
+    path(
+        'publicaciones/<int:publicacion_id>/comentarios/',
+        ComentarioView.as_view(),
+        name='comentarios',
+    ),
+    path(
+        'publicaciones/<int:publicacion_id>/',
+        PublicacionView.as_view(),
+        name='publicacion-detail',
+    ),
+    path(
+        'foros-estudiante/<int:estudiante_id>/',
+        ForosEstudianteView.as_view(),
+        name='foros-estudiante',
+    ),
+    path(
+        'publicaciones-foro/<int:foro_id>/',
+        PublicacionesForoView.as_view(),
+        name='publicaciones-por-foro',
+    ),
+    path(
+        'publicacion/<int:publicacion_id>/',
+        PublicacionComentariosView.as_view(),
+        name='publicacion-con-comentarios',
     ),
 ]

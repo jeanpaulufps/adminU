@@ -12,6 +12,9 @@ from api.models import (
     Semestre,
     TipoDocumento,
     Aula,
+    Publicacion,
+    Foro,
+    Comentario,
 )
 
 # from api import models
@@ -101,3 +104,6 @@ admin.site.register(Carrera)
 admin.site.register(Grupo)
 admin.site.register(Semestre)
 admin.site.register(Aula)
+admin.site.register(Publicacion)
+admin.site.register(Foro)
+admin.site.register(Comentario)
