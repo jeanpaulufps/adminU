@@ -253,3 +253,26 @@ class Comentario(models.Model):
 
     def __str__(self):
         return f"Comentario de {self.estudiante.nombres} en {self.publicacion.titulo}"
+
+
+class HorarioAsesoria(models.Model):
+    DIAS_SEMANA = [
+        ("lunes", "Lunes"),
+        ("martes", "Martes"),
+        ("miercoles", "Miércoles"),
+        ("jueves", "Jueves"),
+        ("viernes", "Viernes"),
+        ("sabado", "Sábado"),
+        ("domingo", "Domingo"),
+    ]
+
+    materia = models.ForeignKey(
+        Materia, on_delete=models.CASCADE, related_name="horarios_asesoria"
+    )
+    dia = models.CharField(max_length=10, choices=DIAS_SEMANA)
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
+    lugar = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.materia.nombre}: {self.dia} {self.hora_inicio}-{self.hora_fin} en {self.lugar}"

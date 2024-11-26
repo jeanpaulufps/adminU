@@ -21,6 +21,7 @@ from .views import (
     PublicacionView,
     ForosEstudianteView,
     PublicacionComentariosView,
+    MateriasConHorariosView,
 )
 
 router = routers.DefaultRouter()
@@ -105,5 +106,10 @@ urlpatterns = [
     path('crear-comentario/', CrearComentarioView.as_view(), name='crear-comentario'),
     path(
         'crear-publicacion/', CrearPublicacionView.as_view(), name='crear-publicacion'
+    ),
+    path(
+        'estudiantes/<int:estudiante_id>/materias-con-horarios/',
+        MateriasConHorariosView.as_view(),
+        name='materias-con-horarios',
     ),
 ]

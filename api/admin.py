@@ -5,6 +5,7 @@ from api.models import (
     Profesor,
     Horario,
     Carrera,
+    HorarioAsesoria,
     Estudiante,
     Materia,
     Grupo,
@@ -75,13 +76,21 @@ class HorarioInline(admin.TabularInline):
     ordering = ['dia', 'horaInicio']
 
 
+class HorarioAsesoriaInline(admin.TabularInline):
+    model = HorarioAsesoria
+    extra = 1
+
+
 class MateriaAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'nombre',
         'creditos',
+        "codigo",
+        "intensidadHoraria",
     ]
-    inlines = [HorarioInline]
+
+    inlines = [HorarioInline, HorarioAsesoriaInline]
 
 
 class HorarioAdmin(admin.ModelAdmin):
@@ -92,6 +101,12 @@ class HorarioAdmin(admin.ModelAdmin):
     search_fields = ['materia__nombre', 'aula__nombre']
 
 
+class HorarioAsesoriaAdmin(admin.ModelAdmin):
+    list_display = ("materia", "dia", "hora_inicio", "hora_fin", "lugar")
+    list_filter = ("dia", "materia")
+
+
+admin.site.register(HorarioAsesoria, HorarioAsesoriaAdmin)
 admin.site.register(Materia, MateriaAdmin)
 admin.site.register(Horario, HorarioAdmin)
 admin.site.register(Nota, NotaAdmin)

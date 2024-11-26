@@ -444,6 +444,7 @@ class CrearComentarioView(APIView):
             return Response(respuesta_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class CrearPublicacionView(APIView):
     def post(self, request):
         serializer = serializers.CrearPublicacionSerializer(data=request.data)
@@ -463,6 +464,23 @@ class CrearPublicacionView(APIView):
 
             publicacion = serializer.save()
 
-            respuesta_serializer = serializers.PublicacionRespuestaSerializer(publicacion)
+            respuesta_serializer = serializers.PublicacionRespuestaSerializer(
+                publicacion
+            )
             return Response(respuesta_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MateriasConHorariosView(APIView):
+    def get(self, request, estudiante_id):
+        try:
+            estudiante = models.Estudiante.objects.get(id=estudiante_id)
+        except models.Estudiante.DoesNotExist:
+            return Response(
+                {"error": "Estudiante no encontrado"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        materias = estudiante.materiasMatriculadas.all()
+
+        serializer = serializers.MateriaConHorariosSerializer(materias, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

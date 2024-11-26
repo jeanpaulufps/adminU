@@ -338,8 +338,11 @@ class CrearPublicacionSerializer(serializers.ModelSerializer):
             "contenido",
         ]
 
+
 class PublicacionRespuestaSerializer(serializers.ModelSerializer):
-    estudiante_nombre = serializers.CharField(source="estudiante.nombres", read_only=True)
+    estudiante_nombre = serializers.CharField(
+        source="estudiante.nombres", read_only=True
+    )
     foro_id = serializers.IntegerField(source="foro.id", read_only=True)
 
     class Meta:
@@ -351,4 +354,25 @@ class PublicacionRespuestaSerializer(serializers.ModelSerializer):
             "contenido",
             "fecha_creacion",
             "estudiante_nombre",
+        ]
+
+
+class HorarioAsesoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.HorarioAsesoria
+        fields = ["dia", "hora_inicio", "hora_fin", "lugar"]
+
+
+class MateriaConHorariosSerializer(serializers.ModelSerializer):
+    horarios_asesoria = HorarioAsesoriaSerializer(many=True)
+
+    class Meta:
+        model = models.Materia
+        fields = [
+            "id",
+            "nombre",
+            "codigo",
+            "creditos",
+            "intensidadHoraria",
+            "horarios_asesoria",
         ]
