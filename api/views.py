@@ -365,7 +365,9 @@ class ForosEstudianteView(APIView):
             serializer = serializers.ForoSerializer(foros, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except models.Estudiante.DoesNotExist:
-            return Response({"error": "Estudiante no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "Estudiante no encontrado"}, status=status.HTTP_404_NOT_FOUND
+            )
 
 
 class PublicacionesForoView(APIView):
@@ -376,7 +378,10 @@ class PublicacionesForoView(APIView):
             serializer = serializers.PublicacionSerializer(publicaciones, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except models.Foro.DoesNotExist:
-            return Response({"error": "Foro no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "Foro no encontrado"}, status=status.HTTP_404_NOT_FOUND
+            )
+
 
 class PublicacionComentariosView(APIView):
     def get(self, request, publicacion_id):
@@ -385,4 +390,56 @@ class PublicacionComentariosView(APIView):
             serializer = serializers.PublicacionComentariosSerializer(publicacion)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except models.Publicacion.DoesNotExist:
-            return Response({"error": "Publicación no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "Publicación no encontrada"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class CrearComentarioView(APIView):
+    def post(self, request):
+        serializer = serializers.CrearComentarioSerializer(data=request.data)
+
+        if serializer.is_valid():
+
+            publicacion_id = serializer.validated_data.get("publicacion").id
+            estudiante_id = serializer.validated_data.get("estudiante").id
+
+            try:
+                publicacion = models.Publicacion.objects.get(id=publicacion_id)
+                estudiante = models.Estudiante.objects.get(id=estudiante_id)
+            except (models.Publicacion.DoesNotExist, models.Estudiante.DoesNotExist):
+                return Response(
+                    {"error": "Publicación o estudiante no encontrados"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            comentario = serializer.save()
+            return Response(
+                {"message": "Comentario creado exitosamente", "id": comentario.id},
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CrearComentarioView(APIView):
+    def post(self, request):
+        serializer = serializers.CrearComentarioSerializer(data=request.data)
+
+        if serializer.is_valid():
+            publicacion_id = serializer.validated_data.get("publicacion").id
+            estudiante_id = serializer.validated_data.get("estudiante").id
+
+            try:
+                models.Publicacion.objects.get(id=publicacion_id)
+                models.Estudiante.objects.get(id=estudiante_id)
+            except (models.Publicacion.DoesNotExist, models.Estudiante.DoesNotExist):
+                return Response(
+                    {"error": "Publicación o estudiante no encontrados"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            comentario = serializer.save()
+
+            respuesta_serializer = serializers.ComentarioRespuestaSerializer(comentario)
+            return Response(respuesta_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

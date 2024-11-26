@@ -3,6 +3,7 @@ from . import views
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 from .views import (
+    CrearComentarioView,
     LoginView,
     PublicacionesForoView,
     PublicacionComentariosView,
@@ -100,4 +101,5 @@ urlpatterns = [
         PublicacionComentariosView.as_view(),
         name='publicacion-con-comentarios',
     ),
+    path('crear-comentario/', CrearComentarioView.as_view(), name='crear-comentario'),
 ]

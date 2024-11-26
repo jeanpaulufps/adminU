@@ -285,7 +285,9 @@ class ForoSerializer(serializers.ModelSerializer):
 
 
 class PublicacionComentariosSerializer(serializers.ModelSerializer):
-    estudiante_nombre = serializers.CharField(source="estudiante.nombres", read_only=True)
+    estudiante_nombre = serializers.CharField(
+        source="estudiante.nombres", read_only=True
+    )
     comentarios = ComentarioSerializer(many=True, read_only=True)
 
     class Meta:
@@ -297,5 +299,32 @@ class PublicacionComentariosSerializer(serializers.ModelSerializer):
             "fecha_creacion",
             "fecha_actualizacion",
             "estudiante_nombre",
-            "comentarios",  # Incluye los comentarios relacionados
+            "comentarios",
+        ]
+
+
+class CrearComentarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Comentario
+        fields = [
+            "publicacion",
+            "estudiante",
+            "contenido",
+        ]
+
+
+class ComentarioRespuestaSerializer(serializers.ModelSerializer):
+    estudiante = serializers.CharField(
+        source="estudiante.nombres", read_only=True
+    )
+    publicacion_id = serializers.IntegerField(source="publicacion.id", read_only=True)
+
+    class Meta:
+        model = models.Comentario
+        fields = [
+            "id",
+            "contenido",
+            "estudiante",
+            "fecha_creacion",
+            "publicacion_id",
         ]
