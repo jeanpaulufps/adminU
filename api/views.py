@@ -443,3 +443,26 @@ class CrearComentarioView(APIView):
             respuesta_serializer = serializers.ComentarioRespuestaSerializer(comentario)
             return Response(respuesta_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CrearPublicacionView(APIView):
+    def post(self, request):
+        serializer = serializers.CrearPublicacionSerializer(data=request.data)
+
+        if serializer.is_valid():
+            foro_id = serializer.validated_data.get("foro").id
+            estudiante_id = serializer.validated_data.get("estudiante").id
+
+            try:
+                models.Foro.objects.get(id=foro_id)
+                models.Estudiante.objects.get(id=estudiante_id)
+            except (models.Foro.DoesNotExist, models.Estudiante.DoesNotExist):
+                return Response(
+                    {"error": "Foro o estudiante no encontrados"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            publicacion = serializer.save()
+
+            respuesta_serializer = serializers.PublicacionRespuestaSerializer(publicacion)
+            return Response(respuesta_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
