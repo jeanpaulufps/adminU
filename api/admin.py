@@ -17,6 +17,8 @@ from api.models import (
     Foro,
     Comentario,
 )
+from django.contrib.auth.hashers import make_password
+from django import forms
 
 # from api import models
 # Register your models here.
@@ -62,7 +64,20 @@ class NotaInline(admin.TabularInline):
     promedio.short_description = 'Promedio'
 
 
+class EstudianteForm(forms.ModelForm):
+    class Meta:
+        model = Estudiante
+        fields = '__all__'
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        if password and not password.startswith("pbkdf2_"):
+            return make_password(password)
+        return password
+
+
 class EstudianteAdmin(admin.ModelAdmin):
+    form = EstudianteForm
     list_display = ['codigo', 'nombres', 'apellidos', 'correoInstitucional']
     search_fields = ['nombres', 'apellidos', 'codigo']
     inlines = [NotaInline]
