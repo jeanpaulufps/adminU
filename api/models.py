@@ -276,3 +276,22 @@ class HorarioAsesoria(models.Model):
 
     def __str__(self):
         return f"{self.materia.nombre}: {self.dia} {self.hora_inicio}-{self.hora_fin} en {self.lugar}"
+
+
+class Evento(models.Model):
+    TIPO_EVENTO = [
+        ("examen", "Examen"),
+        ("inicio_clases", "Inicio de Clases"),
+        ("fin_clases", "Fin de Clases"),
+        ("feriado", "Feriado"),
+        ("otro", "Otro"),
+    ]
+
+    titulo = models.CharField(max_length=255)
+    descripcion = models.TextField(blank=True, null=True)
+    tipo = models.CharField(max_length=50, choices=TIPO_EVENTO, default="otro")
+    fecha_inicio = models.DateTimeField()
+    fecha_fin = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.titulo} ({self.fecha_inicio.date()} - {self.fecha_fin.date()})"

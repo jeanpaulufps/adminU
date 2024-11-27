@@ -376,3 +376,17 @@ class MateriaConHorariosSerializer(serializers.ModelSerializer):
             "intensidadHoraria",
             "horarios_asesoria",
         ]
+
+
+class EventoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Evento
+        fields = [
+            "id",
+            "titulo",
+            "descripcion",
+            "tipo",
+            "fecha_inicio",
+            "fecha_fin",
+        ]

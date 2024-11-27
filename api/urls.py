@@ -112,4 +112,6 @@ urlpatterns = [
         MateriasConHorariosView.as_view(),
         name='materias-con-horarios',
     ),
+    path('eventos/', views.EventoView.as_view(), name='eventos'),
+    path('eventos/<int:evento_id>/', views.EventoDetailView.as_view(), name='evento-detail'),
 ]
